@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#123d32">
+<title>LAND GRID | Uganda Property Marketplace</title>
+<style>
+:root{--green:#123d32;--green2:#1d5948;--gold:#d8b45a;--ink:#17231f;--muted:#64736d;--bg:#f5f7f5;--white:#fff;--line:#e2e9e4}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:var(--green);color:white;padding:15px 18px;position:sticky;top:0;z-index:5;box-shadow:0 2px 12px #0002}
+.top{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:900;letter-spacing:1.4px;font-size:21px}.brand span{color:var(--gold)}.tag{font-size:11px;color:#d7e7df;letter-spacing:.5px}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:11px 15px;font-weight:700}.btn-gold{background:var(--gold);color:#17231f}.btn-light{background:white;color:var(--green)}.btn-outline{background:transparent;border:1px solid var(--line);color:var(--green)}
+main{max-width:1100px;margin:auto;padding:22px 16px 70px}.hero{background:linear-gradient(120deg,#123d32,#26745b);color:white;border-radius:20px;padding:25px 22px;margin-bottom:20px}.hero h1{font-size:clamp(25px,5vw,39px);line-height:1.12;margin:0 0 8px}.hero p{margin:0 0 18px;color:#e2eee8}.searchrow{display:grid;grid-template-columns:1fr auto;gap:8px}.searchrow input{min-width:0}
+input,select,textarea{width:100%;padding:12px;border:1px solid #d8e1da;border-radius:10px;background:white;color:var(--ink)}textarea{min-height:95px;resize:vertical}
+.filters{display:flex;gap:8px;overflow:auto;padding:3px 0 15px}.chip{white-space:nowrap;background:white;border:1px solid var(--line);color:var(--green);padding:8px 13px;border-radius:99px}.chip.active{background:var(--green);color:white}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:15px 0}.sectionhead h2{font-size:20px;margin:0}.muted{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.card{background:white;border:1px solid var(--line);border-radius:15px;overflow:hidden;box-shadow:0 3px 12px #183d3210}.photo{height:175px;background:#dfe8e1;display:flex;align-items:center;justify-content:center;color:#61746a;overflow:hidden}.photo img{width:100%;height:100%;object-fit:cover}.cardbody{padding:13px}.price{color:var(--green2);font-weight:900;font-size:18px}.card h3{margin:5px 0;font-size:16px}.location{color:var(--muted);font-size:13px}.pill{display:inline-block;background:#edf5ef;color:#245a43;border-radius:99px;padding:3px 8px;font-size:11px;font-weight:700;margin-top:8px}.cardactions{display:flex;gap:7px;margin-top:12px}.cardactions button{flex:1;padding:9px 8px;font-size:13px}
+.empty{background:white;border:1px dashed #cbd8ce;padding:25px;text-align:center;border-radius:14px;color:var(--muted)}
+.notice{background:#fff7df;border:1px solid #f0dfa8;color:#594817;padding:12px;border-radius:12px;font-size:13px;margin:16px 0}
+.modal{display:none;position:fixed;inset:0;background:#0009;z-index:10;padding:14px;overflow:auto}.modal.open{display:flex;align-items:flex-start;justify-content:center}.panel{background:white;border-radius:17px;padding:20px;width:min(620px,100%);margin:20px auto}.panelhead{display:flex;justify-content:space-between;align-items:center}.panel h2{margin:0}.close{background:#eef2ef;padding:7px 11px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{margin-top:12px}.field label{display:block;font-weight:700;font-size:13px;margin-bottom:5px}.wide{grid-column:1/-1}.formbuttons{display:flex;gap:9px;margin-top:17px}.formbuttons button{flex:1}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 12px}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.photo{height:145px}}
+@media(max-width:480px){main{padding:15px 12px 60px}.hero{padding:21px 16px}.grid{grid-template-columns:1fr}.photo{height:190px}.formgrid{grid-template-columns:1fr}.wide{grid-column:auto}.top .tag{display:none}}
+</style>
+</head>
+<body>
+<header><div class="top"><div><div class="brand">LAND <span>GRID</span></div><div class="tag">UGANDA PROPERTY MARKETPLACE</div></div><button class="btn-gold" id="postTop">+ Post property</button></div></header>
+<main>
+<section class="hero">
+<h1>Find a place to call yours.</h1>
+<p>Discover land, homes and commercial property across Uganda.</p>
+<div class="searchrow"><input id="search" placeholder="Search by property or location…" aria-label="Search properties"><button class="btn-gold" id="searchBtn">Search</button></div>
+</section>
+<div class="sectionhead"><h2>Explore properties</h2><span class="muted" id="count">0 listings</span></div>
+<div class="filters" id="filters">
+<button class="chip active" data-cat="All">All</button><button class="chip" data-cat="Land">Land</button><button class="chip" data-cat="House">Houses</button><button class="chip" data-cat="Apartment">Apartments</button><button class="chip" data-cat="Commercial">Commercial</button><button class="chip" data-cat="Rental">Rentals</button>
+</div>
+<div class="notice"><strong>Prototype notice:</strong> Listings you add are saved only in this browser on this device. This demo does not yet have real user accounts, shared online listings or payment processing.</div>
+<div class="grid" id="listings"></div>
+<footer>LAND GRID · Uganda · Prices shown in UGX<br>Always verify property ownership and details before making a payment.</footer>
+</main>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+<div class="panel">
+<div class="panelhead"><h2 id="modalTitle">Post a property</h2><button class="close" id="closeModal" aria-label="Close">✕</button></div>
+<form id="propertyForm">
+<div class="formgrid">
+<div class="field wide"><label for="title">Property title *</label><input id="title" required maxlength="90" placeholder="e.g. Residential plot for sale"></div>
+<div class="field"><label for="category">Category *</label><select id="category" required><option value="Land">Land</option><option value="House">House</option><option value="Apartment">Apartment</option><option value="Commercial">Commercial</option><option value="Rental">Rental</option></select></div>
+<div class="field"><label for="price">Price in UGX *</label><input id="price" type="number" min="1" step="1" required placeholder="e.g. 45000000"></div>
+<div class="field wide"><label for="location">Location in Uganda *</label><input id="location" required placeholder="e.g. Entebbe, Wakiso"></div>
+<div class="field wide"><label for="description">Description *</label><textarea id="description" required maxlength="1200" placeholder="Describe the property, size, access roads and important details…"></textarea></div>
+<div class="field"><label for="seller">Seller name *</label><input id="seller" required maxlength="70"></div>
+<div class="field"><label for="phone">Contact phone *</label><input id="phone" required type="tel" placeholder="+256…" maxlength="20"></div>
+<div class="field wide"><label for="photo">Property photo (optional)</label><input id="photo" type="file" accept="image/*"><span class="muted">Choose one photo (maximum 900 KB). A preview will appear before you save.</span><div id="photoPreview" class="muted" style="margin-top:8px"></div></div>
+</div>
+<div class="formbuttons"><button type="button" class="btn-outline" id="cancel">Cancel</button><button type="submit" class="btn-gold">Save listing</button></div>
+</form>
+</div></div>
+<script>
+const KEY='landgrid_demo_listings_v1';
+const starter=[
+{id:'demo1',title:'Residential plot in Wakiso',category:'Land',price:45000000,location:'Wakiso, Uganda',description:'Example listing for demonstration. Confirm the land title, boundaries and ownership independently.',seller:'Example seller',phone:'+256700000001',photo:'',demo:true},
+{id:'demo2',title:'Family home in Entebbe',category:'House',price:250000000,location:'Entebbe, Wakiso',description:'Example property listing. Contact the advertiser for verified details and viewing arrangements.',seller:'Example agent',phone:'+256700000002',photo:'',demo:true}
+];
+let active='All';
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return []}}
+function save(items){localStorage.setItem(KEY,JSON.stringify(items))}
+function money(n){return 'UGX '+Number(n).toLocaleString('en-UG')}
+function safe(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(){
+ const q=document.getElementById('search').value.trim().toLowerCase();
+ const own=load(); const all=[...own,...starter].filter(x=>(active==='All'||x.category===active)&&(!q||[x.title,x.location,x.category,x.description].join(' ').toLowerCase().includes(q)));
+ document.getElementById('count').textContent=all.length+' listings';
+ const host=document.getElementById('listings');
+ if(!all.length){host.innerHTML='<div class="empty" style="grid-column:1/-1">No matching properties yet. Try another search or post the first listing.</div>';return}
+ host.innerHTML=all.map(x=>`<article class="card"><div class="photo">${x.photo?`<img src="${x.photo}" alt="${safe(x.title)}">`:'<span>Property photo</span>'}</div><div class="cardbody"><div class="price">${money(x.price)}</div><h3>${safe(x.title)}</h3><div class="location">⌖ ${safe(x.location)}</div><span class="pill">${safe(x.category)}${x.demo?' · SAMPLE':''}</span><p>${safe(x.description).slice(0,115)}${x.description.length>115?'…':''}</p><div class="muted">Advertiser: ${safe(x.seller)}</div><div class="cardactions"><button class="btn-outline" onclick="details('${safe(x.id)}')">Details</button><button class="btn-gold" onclick="contact('${safe(x.phone)}')">Call seller</button></div></div></article>`).join('');
+}
+function openModal(){document.getElementById('modal').classList.add('open')}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+function details(id){const x=[...load(),...starter].find(a=>a.id===id);if(x)alert(`${x.title}\n${money(x.price)}\n${x.location}\n\n${x.description}\n\nSeller: ${x.seller}\nPhone: ${x.phone}`)}
+function contact(phone){location.href='tel:'+phone.replace(/[^\d+]/g,'')}
+const photoInput=document.getElementById('photo');
+const photoPreview=document.getElementById('photoPreview');
+photoInput.addEventListener('change',()=>{
+ const file=photoInput.files[0];
+ photoPreview.innerHTML='';
+ if(!file)return;
+ if(!file.type.startsWith('image/')){photoInput.value='';photoPreview.textContent='Please choose an image file.';return;}
+ if(file.size>900000){photoInput.value='';photoPreview.textContent='This photo is larger than 900 KB. Please choose a smaller image.';return;}
+ const reader=new FileReader();
+ reader.onload=()=>{photoPreview.innerHTML='';const img=document.createElement('img');img.src=reader.result;img.alt='Selected property photo preview';img.style.cssText='display:block;max-width:100%;max-height:220px;border-radius:10px;margin-top:6px;object-fit:contain';photoPreview.appendChild(img);const note=document.createElement('div');note.textContent=file.name+' · '+Math.round(file.size/1024)+' KB';photoPreview.appendChild(note);};
+ reader.onerror=()=>{photoPreview.textContent='Could not read this photo. Please select it again.';};
+ reader.readAsDataURL(file);
+});
+document.getElementById('postTop').onclick=openModal;
+document.getElementById('closeModal').onclick=closeModal;
+document.getElementById('cancel').onclick=closeModal;
+document.getElementById('searchBtn').onclick=render;
+document.getElementById('search').addEventListener('input',render);
+document.getElementById('filters').addEventListener('click',e=>{const b=e.target.closest('button[data-cat]');if(!b)return;active=b.dataset.cat;document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c===b));render()});
+document.getElementById('propertyForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const file=document.getElementById('photo').files[0];
+ let photo='';
+ if(file){if(file.size>900000){alert('Please choose a photo smaller than 900 KB for this demo.');return}photo=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}
+ const item={id:'lg'+Date.now(),title:document.getElementById('title').value.trim(),category:document.getElementById('category').value,price:Number(document.getElementById('price').value),location:document.getElementById('location').value.trim(),description:document.getElementById('description').value.trim(),seller:document.getElementById('seller').value.trim(),phone:document.getElementById('phone').value.trim(),photo,demo:false};
+ const items=load();items.unshift(item);
+ try{save(items)}catch(err){alert('Your browser storage is full. Try a smaller photo.');return}
+ e.target.reset();photoPreview.innerHTML='';closeModal();render();window.scrollTo({top:0,behavior:'smooth'});
+});
+render();
+</script>
+</body>
+</html>
